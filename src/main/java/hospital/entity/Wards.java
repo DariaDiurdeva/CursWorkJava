@@ -26,7 +26,7 @@ public class Wards {
       private int maxCount;
 
       @JsonIgnore
-      @OneToMany(mappedBy = "wardId", cascade = CascadeType.ALL)
+      @OneToMany(mappedBy = "ward_id", cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
       private List<People> peoplesW;
 
       public Wards(){

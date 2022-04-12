@@ -61,25 +61,26 @@ public class PeopleController {
     }
 
     @GetMapping("/diagnosisByPeopleId/{id}")
-    public ResponseEntity<List<String >> getPeoplesByDiagnosis(@PathVariable("id") Long id){
+    public ResponseEntity<List<String>> getPeoplesByDiagnosis(@PathVariable("id") Long id){
         try {
-            List<String> list = peopleService.getDiagnosisByPeopleID(id);
+            List<String > list = peopleService.getDiagnosisByPeopleID(id);
             return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (PeopleNotFoundException e){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "people not found");
         }
     }
 
-    @GetMapping("/peoplesInWard/{idW}")
-    public ResponseEntity<List<People>> getPeopleInWard(@PathVariable("idW") Long idW){
+    @GetMapping("/peoplesInWard/{ward_id}")
+    public ResponseEntity<List<String>> getPeopleInWard(@PathVariable("ward_id") Long ward_id){
         try {
-            return ResponseEntity.ok(peopleService.getPeoplesInWard(idW));
+            List<String> list = peopleService.getPeoplesInWard(ward_id);
+            return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (RuntimeException exception){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wards not found");
         }
     }
 
-    @DeleteMapping(value = "/deleteAllPeoples")
+    @DeleteMapping(value = "/deletePeoples")
     public ResponseEntity<Void> deletePeoples(){
         peopleService.deleteAllPeoples();
         return  ResponseEntity.ok().build();

@@ -11,6 +11,7 @@ import hospital.repository.WardsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -35,18 +36,17 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public People addPeople(PeopleInform peopleInform) {
-        Optional<Wards> ward = wardsRepository.findById(peopleInform.getWardId());
-        Optional<Diagnosis> diagnosis = diagnosisRepository.findById(peopleInform.getDiagnosisId());
+        Optional<Wards> ward = wardsRepository.findById(peopleInform.getWard_id());
+        Optional<Diagnosis> diagnosis = diagnosisRepository.findById(peopleInform.getDiagnosis_id());
         if(ward.isEmpty()){
             throw new WardsNotFoundException("Ward not found");
         }
         if (diagnosis.isEmpty()){
            throw new DiagnosisNotFoundException("Diagnosis not found");
         }
-        if (ward.get().getMaxCount() > peopleRepository.countPeopleByWardId(ward.get())){
+        if (ward.get().getMaxCount() > peopleRepository.countPeopleByWard_id(ward.get())){
             People people = new People(peopleInform.getFirst_name(),peopleInform.getLast_name(),
                     peopleInform.getFather_name(),ward.get(),diagnosis.get());
-
             return  peopleRepository.save(people);
         } else {
             throw new WardIsFullException("Ward is full, please change ward");
@@ -55,49 +55,30 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public Long countPeoplesByDiagnosis(String name) {
-        Optional<Diagnosis> diagnosis = diagnosisRepository.findDiagnosisByName(name);
-        if(diagnosis.isPresent()){
-            return peopleRepository.countPeopleByDiagnosisId(diagnosis.get());
-        }else {
-            throw new DiagnosisNotFoundException("Diagnosis not found");
-        }
+        return peopleRepository.countPeopleByDiagnosisName(name);
     }
 
     @Override
     public List<String> getWardByPeopleId(Long id) {
-        Optional<People> optionalPeople = peopleRepository.findById(id);
-        if (optionalPeople.isPresent()) {
-            return peopleRepository.getWardsByPeopleId(id);
-        } else {
-            throw new PeopleNotFoundException("People not found");
-        }
+        return peopleRepository.getWardsByPeopleId(id);
     }
 
     @Override
     public List<String> getDiagnosisByPeopleID(Long id) {
-        Optional<People> optionalPeople = peopleRepository.findById(id);
-        if (optionalPeople.isPresent()) {
-            return peopleRepository.getDiagnosisByPeopleId(id);
-        } else {
-            throw new PeopleNotFoundException("People not found");
-        }
+        return peopleRepository.getDiagnosisByPeopleId(id);
     }
 
     @Override
-    public List<People> getPeoplesInWard(Long idW) {
-        Optional<Wards> ward = wardsRepository.findById(idW);
-        if (ward.isPresent()){
-            return peopleRepository.getAllPeopleInWard(idW);
-        } else {
-            throw new RuntimeException("Ward  not found");
-        }
-
+    public List<String> getPeoplesInWard(Long idW) {
+        return peopleRepository.getAllPeopleInWard(idW);
     }
 
     @Override
     public void deletePeople(Long id) {
         Optional<People> optionalPeople = peopleRepository.findById(id);
         if (optionalPeople.isPresent()) {
+            optionalPeople.get().getDiagnosis_id().getPeoplesD().removeIf(a-> Objects.equals(a.getId(), id));
+            optionalPeople.get().getWard_id().getPeoplesW().removeIf(a->Objects.equals(a.getId(), id));
             peopleRepository.deleteById(id);
         } else {
             throw new PeopleNotFoundException("People not found");
@@ -106,14 +87,14 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public People updatePeople(PeopleInform people, Long id) {
         Optional<People> optionalPeople = peopleRepository.findById(id);
-        Optional<Wards> ward = wardsRepository.findById(people.getWardId());
-        Optional<Diagnosis> diagnosis = diagnosisRepository.findById(people.getDiagnosisId());
-        if (optionalPeople.isPresent() && ward.isPresent() && diagnosis.isPresent()) {
+        Optional<Wards> ward = wardsRepository.findById(people.getWard_id());
+        Optional<Diagnosis> diagnosis = diagnosisRepository.findById(people.getDiagnosis_id());
+        if (optionalPeople.isPresent()&& ward.isPresent() && diagnosis.isPresent()) {
            optionalPeople.get().setFirst_name(people.getFirst_name());
            optionalPeople.get().setLast_name(people.getLast_name());
            optionalPeople.get().setFather_name(people.getFather_name());
-           optionalPeople.get().setWardId(ward.get());
-           optionalPeople.get().setDiagnosisId(diagnosis.get());
+           optionalPeople.get().setWard_id(ward.get());
+           optionalPeople.get().setDiagnosis_id(diagnosis.get());
             return peopleRepository.save(optionalPeople.get());
         } else {
             throw new PeopleNotFoundException("failed to update");

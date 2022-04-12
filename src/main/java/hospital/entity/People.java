@@ -1,11 +1,7 @@
 package hospital.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-
-
 import javax.persistence.*;
 
 @Getter
@@ -28,13 +24,13 @@ public class People {
     @Column(name = "father_name", length = 20)
     private String father_name;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "ward_id")
-    private Wards wardId;
+    private Wards ward_id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "diagnosis_id")
-    private Diagnosis diagnosisId;
+    private Diagnosis diagnosis_id;
 
     public People(){
 
@@ -44,8 +40,8 @@ public class People {
         this.first_name = first_name;
         this.last_name = last_name;
         this.father_name = father_name;
-        this.diagnosisId = diagnosis_id;
-        this.wardId = ward_id;
+        this.diagnosis_id = diagnosis_id;
+        this.ward_id = ward_id;
     }
 
     @Override
@@ -54,8 +50,8 @@ public class People {
                 + ", first_name= " + first_name
                 + ", last_name= " + last_name
                 + ", father_name= "+ first_name
-                + ", ward_id= " + wardId.getId()
-                + ", diagnosis_id= " + diagnosisId.getId() + ")";
+                + ", ward_id= " + ward_id.getId()
+                + ", diagnosis_id= " + diagnosis_id.getId() + ")";
     }
 
 }

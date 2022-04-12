@@ -26,8 +26,8 @@ public class WardsServiceImpl implements WardsService{
     }
 
     @Override
-    public List<Wards> findWardByName(String name) {
-        return (List<Wards>) wardsRepository.findAllByName(name);
+    public List<Wards> findWardsByName(String name) {
+        return  wardsRepository.findAllByName(name);
     }
 
     @Override
@@ -49,12 +49,12 @@ public class WardsServiceImpl implements WardsService{
 
     @Override
     public void deleteWard(Long id) {
-        Optional<Wards> optionalWards = wardsRepository.findById(id);
-        if (optionalWards.isPresent()) {
+        /*Optional<Wards> optionalWards = wardsRepository.findById(id);
+        if (optionalWards.isPresent()) {*/
             wardsRepository.deleteById(id);
-        } else {
+       /* } else {
             throw new WardsNotFoundException("Ward not found");
-        }
+        }*/
     }
 
     @Override

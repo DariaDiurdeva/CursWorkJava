@@ -37,7 +37,6 @@ public class DiagnosisServiceImpl implements DiagnosisService {
         } else {
             return diagnosisRepository.findDiagnosisByName(diagnosis.getName()).get();
         }
-
     }
 
     @Override
@@ -53,13 +52,7 @@ public class DiagnosisServiceImpl implements DiagnosisService {
 
     @Override
     public void deleteDiagnosis(Long id) {
-        Optional<Diagnosis> optionalDiagnosis = diagnosisRepository.findById(id);
-        if (optionalDiagnosis.isPresent()) {
-            diagnosisRepository.deleteById(id);
-        } else {
-            throw new DiagnosisNotFoundException("Diagnose not found");
-        }
-
+        diagnosisRepository.deleteById(id);
     }
 
     @Override

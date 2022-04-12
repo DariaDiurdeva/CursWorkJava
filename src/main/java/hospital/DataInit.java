@@ -1,5 +1,6 @@
 package hospital;
 
+import hospital.entity.User;
 import hospital.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -18,5 +19,6 @@ public class DataInit implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        //userRepository.save(new User("masha", passwordEncoder.encode("mm20"), Collections.singletonList("ROLE_USER")));
     }
 }

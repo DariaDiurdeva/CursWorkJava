@@ -4,6 +4,7 @@ import hospital.entity.Diagnosis;
 import hospital.exception.DiagnosisNotFoundException;
 import hospital.service.DiagnosisService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,12 +51,12 @@ public class DiagnosisController {
         try {
             diagnosisService.deleteDiagnosis(id);
             return ResponseEntity.ok().build();
-        } catch (DiagnosisNotFoundException exception){
+        } catch (EmptyResultDataAccessException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Diagnosis not found");
         }
     }
 
-    @DeleteMapping(value = "/deleteAllDiagnoses")
+    @DeleteMapping(value = "/deleteDiagnoses")
     public ResponseEntity<Void> deleteDiagnosis(){
         diagnosisService.deleteAllDiagnoses();
         return  ResponseEntity.ok().build();

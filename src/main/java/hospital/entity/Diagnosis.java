@@ -3,8 +3,6 @@ package hospital.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class Diagnosis {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "diagnosisId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "diagnosis_id", cascade = CascadeType.REMOVE,fetch = FetchType.EAGER)
     private List<People> peoplesD;
 
     public Diagnosis(){

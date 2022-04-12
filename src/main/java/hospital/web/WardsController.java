@@ -5,10 +5,13 @@ import hospital.entity.Wards;
 import hospital.exception.WardsNotFoundException;
 import hospital.service.WardsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -39,7 +42,7 @@ public class WardsController {
     @GetMapping("/ward/byName/{name}")
     public ResponseEntity<List<Wards>> getWardsByName(@PathVariable("name") String name){
         try {
-            return ResponseEntity.ok(wardsService.findWardByName(name));
+            return ResponseEntity.ok(wardsService.findWardsByName(name));
         } catch (WardsNotFoundException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ward not found");
         }
@@ -50,7 +53,7 @@ public class WardsController {
         try {
             wardsService.deleteWard(id);
             return ResponseEntity.ok().build();
-        } catch (WardsNotFoundException exception){
+        } catch (EmptyResultDataAccessException exception){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ward not found");
         }
     }
@@ -60,7 +63,7 @@ public class WardsController {
         return ResponseEntity.ok(wardsService.addWard(ward));
     }
 
-    @PutMapping(value = "/updateWards/{id}", consumes = "application/json", produces = "application/json")
+    @PutMapping(value = "/updateWard/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Wards> updateWards(@RequestBody Wards newWard, @PathVariable("id") Long id){
         try {
             return ResponseEntity.ok(wardsService.updateWard(newWard,id));
